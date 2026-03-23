@@ -25,7 +25,9 @@ export type LangKey =
   | "mosque_radius" | "dua_title" | "dua_sub" | "search_dua"
   | "todays_progress" | "prayer" | "dhikr" | "tap_increment"
   | "ayat_of_day" | "holy_quran_sub" | "install_app" | "install_desc" 
-  | "not_now" | "install";
+  | "not_now" | "install"
+  | "dzikir" | "dzikir_sub" | "dzikir_completed" | "dzikir_progress" 
+  | "dzikir_done" | "reset" | "dzikir_presets";
 
 type Translations = Record<LangKey, string>;
 
@@ -116,6 +118,13 @@ const id: Translations = {
   install_desc: "Tambahkan ke layar utama untuk akses offline",
   not_now: "Lain kali",
   install: "Pasang",
+  dzikir: "Zikir",
+  dzikir_sub: "Tasbih digital",
+  dzikir_completed: "Target Tercapai!",
+  dzikir_progress: "Tekan untuk menghitung",
+  dzikir_done: "Selesai",
+  reset: "Mulai Ulang",
+  dzikir_presets: "Pilihan Zikir",
 };
 
 const en: Translations = {
@@ -205,6 +214,13 @@ const en: Translations = {
   install_desc: "Add to home screen for offline access",
   not_now: "Not now",
   install: "Install",
+  dzikir: "Tasbih",
+  dzikir_sub: "Digital counter",
+  dzikir_completed: "Target Reached!",
+  dzikir_progress: "Tap to count",
+  dzikir_done: "Done",
+  reset: "Reset",
+  dzikir_presets: "Dzikir Presets",
 };
 
 export const TRANSLATIONS = { id, en } as const;

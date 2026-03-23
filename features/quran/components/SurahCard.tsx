@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { NeumorphicCard } from "@/components/neumorphism";
 import type { Surah } from "@/features/quran/types";
 import { useLangStore } from "@/features/lang/store/langStore";
+import { SURAH_ID_TRANSLATION } from "@/constants/surah-id";
 
 interface SurahCardProps {
   surah: Surah;
@@ -14,11 +15,16 @@ interface SurahCardProps {
 }
 
 export const SurahCard = memo(function SurahCard({ surah, index, searchQuery }: SurahCardProps) {
-  const { t } = useLangStore();
+  const { t, lang } = useLangStore();
+  
+  const meaning = lang === "id" 
+    ? (SURAH_ID_TRANSLATION[surah.number] || "Tidak tersedia")
+    : surah.englishNameTranslation;
+
   const isHighlighted =
     searchQuery &&
     (surah.englishName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      surah.englishNameTranslation.toLowerCase().includes(searchQuery.toLowerCase()));
+      meaning.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <motion.div
@@ -41,7 +47,7 @@ export const SurahCard = memo(function SurahCard({ surah, index, searchQuery }: 
                 {surah.englishName}
               </span>
               <span className="text-xs text-neu-muted dark:text-neu-dark-muted">
-                {surah.englishNameTranslation}
+                {meaning}
               </span>
             </div>
             <div className="flex items-center gap-2 mt-0.5">

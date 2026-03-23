@@ -28,6 +28,7 @@ export const RECITERS = [
 
 export const MENU_ITEMS = [
   { id: "duas",     labelKey: "daily_dua",     icon: "🤲", href: "/duas" },
+  { id: "dzikir",   labelKey: "dzikir",        icon: "📿", href: "/dzikir" },
   { id: "qibla",   labelKey: "qibla",         icon: "🧭", href: "/qibla" },
   { id: "schedule",labelKey: "prayer_time",   icon: "🕌", href: "/schedule" },
   { id: "mosque",  labelKey: "nearby_mosque", icon: "📍", href: "/mosque" },

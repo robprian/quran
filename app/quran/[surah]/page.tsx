@@ -11,6 +11,7 @@ import { ErrorUI } from "@/components/ui/ErrorUI";
 import { useQuranStore } from "@/features/quran/store/quranStore";
 import { NeumorphicButton } from "@/components/neumorphism";
 import { useLangStore } from "@/features/lang/store/langStore";
+import { SURAH_ID_TRANSLATION } from "@/constants/surah-id";
 
 interface SurahPageProps {
   params: Promise<{ surah: string }>;
@@ -21,7 +22,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   const surahNumber = parseInt(surahParam, 10);
   const { data, isLoading, isError, refetch } = useSurah(surahNumber);
   const { lastRead, setLastRead } = useQuranStore();
-  const { t } = useLangStore();
+  const { t, lang } = useLangStore();
   const scrolledRef = useRef(false);
 
   // Auto-scroll to last read ayah once data loads
@@ -58,6 +59,10 @@ export default function SurahPage({ params }: SurahPageProps) {
       ? t("medinan")
       : data.revelationType;
 
+  const meaning = lang === "id"
+    ? (SURAH_ID_TRANSLATION[surahNumber] || "Tidak tersedia")
+    : data.englishNameTranslation;
+
   return (
     <div className="space-y-4 pb-36">
       {/* Back button */}
@@ -76,7 +81,7 @@ export default function SurahPage({ params }: SurahPageProps) {
           {data.name}
         </h1>
         <div className="text-xl font-bold text-neu-text dark:text-neu-dark-text">{data.englishName}</div>
-        <div className="text-sm text-neu-muted dark:text-neu-dark-muted">{data.englishNameTranslation}</div>
+        <div className="text-sm text-neu-muted dark:text-neu-dark-muted">{meaning}</div>
         <div className="flex items-center justify-center gap-3 mt-3 text-xs text-neu-muted dark:text-neu-dark-muted">
           <span className="px-3 py-1 rounded-full bg-[#c8cdd6]/50 dark:bg-[#2a2a2a]/50">{revelationType}</span>
           <span>{mergedAyahs.length} {t("ayahs")}</span>
