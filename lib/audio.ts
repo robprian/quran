@@ -4,14 +4,15 @@
  * Supports auto-play (onEnded callback for sequential playback).
  */
 
+import type { MergedAyah } from "@/features/quran/types";
+
 type AudioEventCallback = (ayahKey: string, isPlaying: boolean, isLoading: boolean) => void;
-type OnEndedCallback = (ayahKey: string) => void;
 
 class AudioManager {
-  private audio: HTMLAudioElement | null = null;
+  private audio = typeof window !== "undefined" ? new Audio() : null;
   private currentKey: string | null = null;
   private listeners: Set<AudioEventCallback> = new Set();
-  private onEndedCallback: OnEndedCallback | null = null;
+  public isAutoPlay = false;
 
   private emit(key: string, isPlaying: boolean, isLoading = false) {
     this.listeners.forEach((cb) => cb(key, isPlaying, isLoading));
@@ -22,56 +23,74 @@ class AudioManager {
     return () => this.listeners.delete(cb);
   }
 
-  /** Set a callback to be called when the current audio ends naturally */
-  setOnEnded(cb: OnEndedCallback | null) {
-    this.onEndedCallback = cb;
-  }
+  playAyah(ayah: MergedAyah, surahNumber: number): void {
+    if (!this.audio || !ayah.audioUrl) return;
 
-  play(url: string, ayahKey: string): void {
-    // Stop any existing audio first
-    if (this.audio) {
-      this.audio.pause();
-      this.audio.src = "";
-      if (this.currentKey) this.emit(this.currentKey, false, false);
-    }
+    const key = `${surahNumber}:${ayah.numberInSurah}`;
 
-    this.audio = new Audio();
-    this.currentKey = ayahKey;
+    // Prevent double click
+    if (this.currentKey === key && !this.audio.paused) return;
 
-    // Emit loading state
-    this.emit(ayahKey, false, true);
+    // Reset strictly
+    this.audio.pause();
+    this.audio.currentTime = 0;
+    this.audio.onended = null;
 
-    this.audio.addEventListener("canplay", () => {
-      this.audio?.play().catch((err) => {
+    this.currentKey = key;
+    this.audio.src = ayah.audioUrl;
+
+    this.emit(key, false, true); // loading
+
+    this.audio.play()
+      .then(() => {
+        this.emit(key, true, false);
+      })
+      .catch((err) => {
         console.error("[AudioManager] Playback failed:", err);
-        if (this.currentKey) this.emit(this.currentKey, false, false);
+        this.emit(key, false, false);
+        if (this.isAutoPlay && this.audio?.onended) {
+          this.audio.onended(new Event("ended"));
+        }
       });
-    }, { once: true });
-
-    this.audio.addEventListener("playing", () => {
-      this.emit(ayahKey, true, false);
-    }, { once: true });
 
     this.audio.onerror = () => {
-      console.error("[AudioManager] Audio error for:", ayahKey);
-      this.emit(ayahKey, false, false);
-      // Trigger onended so auto-play can skip to next
-      if (this.onEndedCallback) this.onEndedCallback(ayahKey);
-      this.currentKey = null;
+      console.error("[AudioManager] Audio error for:", key);
+      this.emit(key, false, false);
+      if (this.isAutoPlay && this.audio?.onended) {
+        this.audio.onended(new Event("ended"));
+      }
     };
+  }
 
-    this.audio.onended = () => {
-      this.emit(ayahKey, false, false);
-      const key = this.currentKey;
-      this.currentKey = null;
-      // Fire the auto-next callback after emit so state is clean
-      if (key && this.onEndedCallback) {
-        this.onEndedCallback(key);
+  playSequential(list: MergedAyah[], surahNumber: number, startIndex = 0): void {
+    let i = startIndex;
+    this.isAutoPlay = true;
+
+    const playNext = () => {
+      if (!this.isAutoPlay || i >= list.length) {
+        this.isAutoPlay = false;
+        return;
+      }
+
+      const ayah = list[i];
+      if (!ayah.audioUrl) {
+        i++;
+        playNext();
+        return;
+      }
+
+      this.playAyah(ayah, surahNumber);
+
+      if (this.audio) {
+        this.audio.onended = () => {
+          this.emit(`${surahNumber}:${ayah.numberInSurah}`, false, false);
+          i++;
+          playNext();
+        };
       }
     };
 
-    this.audio.src = url;
-    this.audio.load();
+    playNext();
   }
 
   pause(): void {
@@ -83,24 +102,27 @@ class AudioManager {
 
   resume(): void {
     if (this.audio && this.audio.paused && this.currentKey) {
-      this.audio.play().catch(console.error);
-      this.emit(this.currentKey, true, false);
+      const key = this.currentKey;
+      this.emit(key, false, true);
+      this.audio.play()
+        .then(() => this.emit(key, true, false))
+        .catch(() => this.emit(key, false, false));
     }
   }
 
-  stop(): void {
+  stopPlayback(): void {
+    this.isAutoPlay = false;
     if (this.audio) {
       this.audio.pause();
-      this.audio.src = "";
-      if (this.currentKey) this.emit(this.currentKey, false, false);
-      this.audio = null;
-      this.currentKey = null;
+      this.audio.currentTime = 0;
+      this.audio.onended = null;
     }
-    this.onEndedCallback = null;
+    if (this.currentKey) this.emit(this.currentKey, false, false);
+    this.currentKey = null;
   }
 
   getCurrentKey(): string | null { return this.currentKey; }
-  isPlaying(): boolean { return !!this.audio && !this.audio.paused && !this.audio.ended; }
+  getIsPlaying(): boolean { return !!this.audio && !this.audio.paused && !this.audio.ended; }
 }
 
 export const audioManager = typeof window !== "undefined" ? new AudioManager() : null;

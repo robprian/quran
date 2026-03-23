@@ -34,74 +34,44 @@ export function AutoPlayBar({ surahNumber, ayahs }: AutoPlayBarProps) {
   const ayahsRef = useRef<MergedAyah[]>(ayahs);
   useEffect(() => { ayahsRef.current = ayahs; }, [ayahs]);
 
-  /** Play a specific ayah */
-  const playAyah = useCallback((ayah: MergedAyah) => {
-    const key = `${surahNumber}:${ayah.numberInSurah}`;
-    useAudioStore.setState({
-      currentAyahKey: key,
-      isPlaying: false,
-      isLoading: true,
-      currentSurahNumber: surahNumber,
-      currentAyahNumber: ayah.numberInSurah,
-      currentAudioUrl: ayah.audioUrl,
-    });
-    audioManager?.play(ayah.audioUrl, key);
-  }, [surahNumber]);
-
-  /** Auto-next: called when an ayah ends */
-  const handleEnded = useCallback((endedKey: string) => {
-    const state = useAudioStore.getState();
-    if (!state.isAutoPlay || state.currentSurahNumber !== surahNumber) return;
-
-    // Find the ayah that just ended and play the next one
-    const [, endedNumStr] = endedKey.split(":");
-    const endedNum = parseInt(endedNumStr, 10);
-    const list = ayahsRef.current;
-    const nextAyah = list.find((a) => a.numberInSurah === endedNum + 1);
-
-    if (nextAyah && nextAyah.audioUrl) {
-      playAyah(nextAyah);
-    } else if (nextAyah) {
-      // Skip ayahs without audio
-      const withAudio = list.find((a) => a.numberInSurah > endedNum && a.audioUrl);
-      if (withAudio) {
-        playAyah(withAudio);
-      } else {
-        useAudioStore.getState().stopAutoPlay();
-        audioManager?.setOnEnded(null);
-      }
-    } else {
-      // End of surah
-      useAudioStore.getState().stopAutoPlay();
-      audioManager?.setOnEnded(null);
-    }
-  }, [surahNumber, playAyah]);
-
   /** Subscribe/unsubscribe AudioManager events to sync Zustand state */
   useEffect(() => {
     if (!autoPlayActive) return;
 
     const unsub = audioManager?.subscribe((k, playing, loading) => {
-      const [s] = k.split(":");
+      const [s, a] = k.split(":");
       if (parseInt(s, 10) !== surahNumber) return;
-      useAudioStore.setState({ isPlaying: playing, isLoading: loading });
+
+      useAudioStore.setState({
+        isPlaying: playing,
+        isLoading: loading,
+        currentAyahNumber: parseInt(a, 10),
+        currentAyahKey: k,
+      });
+
+      // Automatically close AutoPlayBar if audioManager finished the sequence
+      if (!playing && !loading && audioManager && !audioManager.isAutoPlay) {
+         // Optionally trigger stopAutoPlay if completely done
+         // but let's just make sure UI reflects accurately.
+         const list = ayahsRef.current;
+         if (list.length > 0 && parseInt(a, 10) === list[list.length - 1].numberInSurah) {
+           useAudioStore.getState().stopAutoPlay();
+         }
+      }
     });
 
     return () => unsub?.();
   }, [autoPlayActive, surahNumber]);
 
   const handleStartAutoPlay = () => {
-    // Find starting ayah: last-read or first with audio
-    const startNum = (isThisSurah && currentAyahNumber) ?? 1;
-    const startAyah =
-      ayahs.find((a) => a.numberInSurah === startNum && a.audioUrl) ??
-      ayahs.find((a) => a.audioUrl);
+    const startNum = isThisSurah && currentAyahNumber ? currentAyahNumber : 1;
+    const startIndex = ayahs.findIndex((a) => a.numberInSurah >= startNum && a.audioUrl);
+    const actualStartIndex = startIndex !== -1 ? startIndex : ayahs.findIndex((a) => a.audioUrl);
 
-    if (!startAyah) return;
+    if (actualStartIndex === -1) return;
 
-    startAutoPlay(surahNumber, ayahs, startAyah.numberInSurah);
-    audioManager?.setOnEnded(handleEnded);
-    playAyah(startAyah);
+    startAutoPlay(surahNumber, ayahs, ayahs[actualStartIndex].numberInSurah);
+    audioManager?.playSequential(ayahs, surahNumber, actualStartIndex);
   };
 
   const handlePauseResume = () => {
@@ -110,13 +80,11 @@ export function AutoPlayBar({ surahNumber, ayahs }: AutoPlayBarProps) {
       pauseAudio();
     } else {
       audioManager?.resume();
-      useAudioStore.setState({ isPlaying: true });
     }
   };
 
   const handleStop = () => {
-    audioManager?.stop();
-    audioManager?.setOnEnded(null);
+    audioManager?.stopPlayback();
     stopAutoPlay();
   };
 

@@ -15,8 +15,7 @@ export function AudioPlayer() {
   const { t } = useLangStore();
 
   const handleStop = () => {
-    audioManager?.stop();
-    audioManager?.setOnEnded(null);
+    audioManager?.stopPlayback();
     if (isAutoPlay) stopAutoPlay(); else stop();
   };
 

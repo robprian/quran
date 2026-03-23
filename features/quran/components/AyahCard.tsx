@@ -44,11 +44,10 @@ export const AyahCard = memo(function AyahCard({ ayah, surahNumber, surahName }:
       audioManager?.pause();
       pauseAudio();
     } else if (isCurrentlyLoading) {
-      audioManager?.stop();
+      audioManager?.stopPlayback();
       stop();
     } else {
-      audioManager?.stop();
-      audioManager?.setOnEnded(null); // disable auto-play when manual
+      audioManager?.stopPlayback(); // Stops any existing play including auto-play
       useAudioStore.setState({
         currentAyahKey: key,
         isPlaying: false,
@@ -68,7 +67,7 @@ export const AyahCard = memo(function AyahCard({ ayah, surahNumber, surahName }:
           }
         }
       });
-      audioManager?.play(ayah.audioUrl, key);
+      audioManager?.playAyah(ayah, surahNumber);
     }
   };
 

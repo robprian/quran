@@ -171,48 +171,35 @@ function mergeEditions(editions: AyahEditions): MergedAyah[] {
 
   if (!arabic?.ayahs?.length) return [];
 
-  // Build lookup maps keyed by numberInSurah (integer) for each edition
-  const latinMap  = new Map<number, string>();
-  const idMap     = new Map<number, string>();
-  const enMap     = new Map<number, string>();
-  const audioMap  = new Map<number, number>(); // numberInSurah → absolute number
+  // STEP 1: SORT ALL
+  const sortFn = (a: any, b: any) => a.numberInSurah - b.numberInSurah;
+  arabic.ayahs.sort(sortFn);
+  if (latin?.ayahs) latin.ayahs.sort(sortFn);
+  if (transId?.ayahs) transId.ayahs.sort(sortFn);
+  if (transEn?.ayahs) transEn.ayahs.sort(sortFn);
+  if (audioEd?.ayahs) audioEd.ayahs.sort(sortFn);
 
-  latin?.ayahs?.forEach((a)   => latinMap.set(a.numberInSurah, a.text));
-  transId?.ayahs?.forEach((a) => idMap.set(a.numberInSurah, a.text));
-  transEn?.ayahs?.forEach((a) => enMap.set(a.numberInSurah, a.text));
-  audioEd?.ayahs?.forEach((a) => audioMap.set(a.numberInSurah, a.number));
-
-  const merged: MergedAyah[] = [];
-
-  for (const a of arabic.ayahs) {
-    const n = a.numberInSurah;
-
-    // Validation: skip if core content missing
-    const arabicText = a.text?.trim();
-    if (!arabicText) continue;
-
-    const latinText   = latinMap.get(n) ?? "";
-    const idText      = idMap.get(n)    ?? "";
-    const enText      = enMap.get(n)    ?? "";
-    const absNum      = audioMap.get(n) ?? a.number;
-
-    // Audio: only disable if we have no absolute number at all
+  // STEP 2: MAP BY numberInSurah (NOT INDEX)
+  const merged: MergedAyah[] = arabic.ayahs.map((a) => {
+    const key = a.numberInSurah;
+    const absNum = audioEd?.ayahs?.find((x: any) => x.numberInSurah === key)?.number ?? a.number;
     const hasAudio = absNum > 0;
 
-    merged.push({
-      numberInSurah: n,
+    return {
+      numberInSurah: key,
       absoluteNumber: a.number,
-      arabic: arabicText,
-      latin: latinText,
-      translationId: idText,
-      translationEn: enText,
+      arabic: a.text?.trim() ?? "",
+      latin: latin?.ayahs?.find((x: any) => x.numberInSurah === key)?.text ?? "",
+      translationId: transId?.ayahs?.find((x: any) => x.numberInSurah === key)?.text ?? "",
+      translationEn: transEn?.ayahs?.find((x: any) => x.numberInSurah === key)?.text ?? "",
       audioUrl: hasAudio ? buildAudioCdnUrl(absNum) : "",
       juz: a.juz,
       page: a.page,
-    });
-  }
+    };
+  });
 
-  return merged;
+  // STEP 3: REMOVE INVALID AYAH
+  return merged.filter((a) => a.arabic && a.numberInSurah && a.audioUrl);
 }
 
 // ── Surah list ────────────────────────────────────────────────────────────────
