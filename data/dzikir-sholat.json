@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "title": "Istighfar",
+    "arabic": "أَسْتَغْفِرُ اللهَ",
+    "latin": "Astaghfirullah",
+    "translation": "Aku mohon ampun kepada Allah.",
+    "repeat": 3
+  },
+  {
+    "id": 2,
+    "title": "Doa Keselamatan",
+    "arabic": "اَللَّهُمَّ أَنْتَ السَّلاَمُ، وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
+    "latin": "Allahumma antas-salaam, wa mingkas-salaam, tabaarakta yaa dzal-jalaali wal-ikraam.",
+    "translation": "Ya Allah, Engkau Mahasejahtera, dan dari-Mu kesejahteraan, Maha Suci Engkau wahai Rabb Pemilik keagungan dan kemuliaan.",
+    "repeat": 1
+  },
+  {
+    "id": 3,
+    "title": "Kalimat Tauhid",
+    "arabic": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+    "latin": "Laa ilaaha illallaah wahdahu laa syariika lah, lahul-mulku wa lahul-hamdu wa huwa 'alaa kulli syai-in qadiir.",
+    "translation": "Tidak ada Tuhan yang berhak disembah melainkan Allah semata, tidak ada sekutu bagi-Nya. Bagi-Nya kerajaan dan puji-pujian. Dialah Yang Mahakuasa atas segala sesuatu.",
+    "repeat": 1
+  },
+  {
+    "id": 4,
+    "title": "Ayat Kursi",
+    "arabic": "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ ...",
+    "latin": "Allāhu lā ilāha illā huw, al-ḥayyul-qayyūm...",
+    "translation": "Allah, tidak ada Tuhan melainkan Dia Yang Hidup kekal... (QS. Al-Baqarah: 255)",
+    "repeat": 1
+  },
+  {
+    "id": 5,
+    "title": "Tasbih",
+    "arabic": "سُبْحَانَ اللهِ",
+    "latin": "Subhanallah",
+    "translation": "Maha Suci Allah",
+    "repeat": 33
+  },
+  {
+    "id": 6,
+    "title": "Tahmid",
+    "arabic": "اَلْحَمْدُ لِلَّهِ",
+    "latin": "Alhamdulillah",
+    "translation": "Segala puji bagi Allah",
+    "repeat": 33
+  },
+  {
+    "id": 7,
+    "title": "Takbir",
+    "arabic": "اَللَّهُ أَكْبَرُ",
+    "latin": "Allahu Akbar",
+    "translation": "Allah Maha Besar",
+    "repeat": 34
+  },
+  {
+    "id": 8,
+    "title": "Penyempurna Seratus",
+    "arabic": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+    "latin": "Laa ilaaha illallaah wahdahu laa syariika lah, lahul-mulku wa lahul-hamdu wa huwa 'alaa kulli syai-in qadiir.",
+    "translation": "Tidak ada Tuhan melainkan Allah semata, tidak ada sekutu bagi-Nya... (Membaca kalimat ini menghapus kesalahan walau sebanyak buih lautan)",
+    "repeat": 1
+  }
+]

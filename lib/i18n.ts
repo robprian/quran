@@ -27,7 +27,8 @@ export type LangKey =
   | "ayat_of_day" | "holy_quran_sub" | "install_app" | "install_desc" 
   | "not_now" | "install"
   | "dzikir" | "dzikir_sub" | "dzikir_completed" | "dzikir_progress" 
-  | "dzikir_done" | "reset" | "dzikir_presets";
+  | "dzikir_done" | "reset" | "dzikir_presets"
+  | "cerita" | "cerita_sub" | "lessons" | "hikmah";
 
 type Translations = Record<LangKey, string>;
 
@@ -125,6 +126,10 @@ const id: Translations = {
   dzikir_done: "Selesai",
   reset: "Mulai Ulang",
   dzikir_presets: "Pilihan Zikir",
+  cerita: "Cerita Islami",
+  cerita_sub: "Kisah hikmah dari Al-Qur'an",
+  lessons: "Pelajaran",
+  hikmah: "Hikmah",
 };
 
 const en: Translations = {
@@ -221,6 +226,10 @@ const en: Translations = {
   dzikir_done: "Done",
   reset: "Reset",
   dzikir_presets: "Dzikir Presets",
+  cerita: "Islamic Stories",
+  cerita_sub: "Wisdom tales from Al-Quran",
+  lessons: "Lessons",
+  hikmah: "Wisdom",
 };
 
 export const TRANSLATIONS = { id, en } as const;
