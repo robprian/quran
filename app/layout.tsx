@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "Quran App",
   },
+  icons: {
+    apple: "/logo-light.png",
+  },
   openGraph: {
     title: "Quran App",
     description: "Read and listen to the Holy Quran with beautiful neumorphic design.",

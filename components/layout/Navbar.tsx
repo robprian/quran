@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import { NeumorphicButton } from "@/components/neumorphism";
 import { LangSwitcher } from "@/components/ui/LangSwitcher";
 import { useLangStore } from "@/features/lang/store/langStore";
-
+import { Logo } from "@/components/ui/Logo";
+import { useFavicon } from "@/hooks/useFavicon";
 
 export function Navbar() {
   const [dark, setDark] = useState(false);
   const { t } = useLangStore();
+  useFavicon();
 
   useEffect(() => {
     const stored = localStorage.getItem("quran-theme");
@@ -36,10 +38,8 @@ export function Navbar() {
       <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-light to-accent flex items-center justify-center shadow-[3px_3px_6px_rgba(212,175,55,0.4)]">
-            <span className="text-white text-lg">☪</span>
-          </div>
-          <div>
+          <Logo className="w-10 h-10 drop-shadow-sm" />
+          <div className="hidden sm:block">
             <div className="text-sm font-bold text-neu-text dark:text-neu-dark-text leading-tight tracking-wide">
               Quran App
             </div>
