@@ -5,7 +5,7 @@ interface NeumorphicCardProps {
   className?: string;
   pressed?: boolean;
   onClick?: () => void;
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType;
 }
 
 export function NeumorphicCard({
@@ -22,7 +22,6 @@ export function NeumorphicCard({
     : "shadow-neu-flat dark:shadow-neu-dark-flat";
 
   return (
-    // @ts-expect-error dynamic tag
     <Tag
       onClick={onClick}
       className={`${base} ${shadow} ${className} ${onClick ? "cursor-pointer" : ""}`}
