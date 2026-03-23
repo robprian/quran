@@ -97,20 +97,14 @@ export const AyahCard = memo(function AyahCard({ ayah, surahNumber, surahName }:
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <motion.div
-        animate={
-          isCurrentlyPlaying
-            ? { scale: [1, 1.015, 1], transition: { repeat: Infinity, duration: 2, ease: "easeInOut" } }
-            : { scale: 1 }
-        }
-      >
+      <div className={`transition-transform duration-500 ${isCurrentlyPlaying ? "scale-105" : ""}`}>
         <NeumorphicCard
           className={`p-5 transition-all duration-500 ${
             isCurrentlyPlaying
-              ? "ring-2 ring-accent shadow-[0_0_28px_rgba(212,175,55,0.4)] dark:shadow-[0_0_28px_rgba(212,175,55,0.25)]"
+              ? "border-2 border-[#D4AF37] shadow-[0_0_15px_#D4AF37] animate-pulse"
               : isCurrentlyLoading
-              ? "ring-1 ring-accent/40"
-              : ""
+              ? "border-2 border-[#D4AF37]/40"
+              : "border-2 border-transparent"
           }`}
         >
           {/* Header */}
@@ -204,7 +198,7 @@ export const AyahCard = memo(function AyahCard({ ayah, surahNumber, surahName }:
             </motion.div>
           )}
         </NeumorphicCard>
-      </motion.div>
+      </div>
     </motion.div>
   );
 });

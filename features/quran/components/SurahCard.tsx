@@ -5,6 +5,7 @@ import { memo } from "react";
 import { motion } from "framer-motion";
 import { NeumorphicCard } from "@/components/neumorphism";
 import type { Surah } from "@/features/quran/types";
+import { useLangStore } from "@/features/lang/store/langStore";
 
 interface SurahCardProps {
   surah: Surah;
@@ -13,6 +14,7 @@ interface SurahCardProps {
 }
 
 export const SurahCard = memo(function SurahCard({ surah, index, searchQuery }: SurahCardProps) {
+  const { t } = useLangStore();
   const isHighlighted =
     searchQuery &&
     (surah.englishName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,10 +52,10 @@ export const SurahCard = memo(function SurahCard({ surah, index, searchQuery }: 
                     : "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
                 }`}
               >
-                {surah.revelationType}
+                {surah.revelationType === "Meccan" ? t("meccan") : t("medinan")}
               </span>
               <span className="text-xs text-neu-muted dark:text-neu-dark-muted">
-                {surah.numberOfAyahs} ayahs
+                {surah.numberOfAyahs} {t("ayahs")}
               </span>
             </div>
           </div>

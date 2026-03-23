@@ -71,17 +71,21 @@ function ProgressRing({ label, emoji, color, max }: RingProps) {
   );
 }
 
+import { useLangStore } from "@/features/lang/store/langStore";
+import type { LangKey } from "@/lib/i18n";
+
 export function ProgressTracker() {
+  const { t } = useLangStore();
   const trackers: RingProps[] = [
-    { label: "Prayer", emoji: "🕌", color: "#D4AF37", max: 5 },
-    { label: "Qur'an", emoji: "📖", color: "#4CAF50", max: 10 },
-    { label: "Dhikr", emoji: "📿", color: "#9C27B0", max: 33 },
+    { label: t("prayer"), emoji: "🕌", color: "#D4AF37", max: 5 },
+    { label: t("quran"), emoji: "📖", color: "#4CAF50", max: 10 },
+    { label: t("dhikr"), emoji: "📿", color: "#9C27B0", max: 33 },
   ];
 
   return (
     <NeumorphicCard className="p-5">
       <div className="text-sm font-bold text-neu-text dark:text-neu-dark-text mb-4">
-        Today's Progress
+        {t("todays_progress")}
       </div>
       <div className="flex items-center justify-around">
         {trackers.map((t) => (
@@ -89,7 +93,7 @@ export function ProgressTracker() {
         ))}
       </div>
       <p className="text-[10px] text-neu-muted dark:text-neu-dark-muted text-center mt-3">
-        Tap a ring to increment
+        {t("tap_increment")}
       </p>
     </NeumorphicCard>
   );

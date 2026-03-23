@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { NeumorphicCard } from "@/components/neumorphism";
 import { fetchSurahDetail } from "@/features/quran/api/quranApi";
 import type { Ayah } from "@/features/quran/types";
+import { useLangStore } from "@/features/lang/store/langStore";
 
 // Use Al-Fatiha (surah 1) as daily ayah — deterministic based on date
 function getDailyAyahIndex(): number {
@@ -17,6 +18,7 @@ export function AyatOfTheDay() {
   const [translation, setTranslation] = useState<string>("");
   const [ayahNum, setAyahNum] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const { t, lang } = useLangStore();
 
   useEffect(() => {
     fetchSurahDetail(1)
@@ -24,19 +26,21 @@ export function AyatOfTheDay() {
         const idx = getDailyAyahIndex() - 1;
         const arabicAyah = data.editions?.[0]?.ayahs?.[idx];
         const engAyah = data.editions?.[1]?.ayahs?.[idx];
-        if (arabicAyah && engAyah) {
+        const idAyah = data.editions?.[2]?.ayahs?.[idx];
+        const transAyah = lang === "id" && idAyah ? idAyah : engAyah;
+        if (arabicAyah && transAyah) {
           setArabicText(arabicAyah.text);
-          setTranslation(engAyah.text);
+          setTranslation(transAyah.text);
           setAyahNum(arabicAyah.numberInSurah);
         }
       })
       .catch(() => {
         setArabicText("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ");
-        setTranslation("In the name of Allah, the Entirely Merciful, the Especially Merciful.");
+        setTranslation(lang === "id" ? "Dengan menyebut nama Allah Yang Maha Pemurah lagi Maha Penyayang." : "In the name of Allah, the Entirely Merciful, the Especially Merciful.");
         setAyahNum(1);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [lang]);
 
   return (
     <NeumorphicCard className="p-6 relative overflow-hidden">
@@ -47,7 +51,7 @@ export function AyatOfTheDay() {
 
       <div className="text-xs font-semibold text-accent uppercase tracking-widest mb-4 flex items-center gap-2">
         <span>✨</span>
-        <span>Ayat of the Day · 1:{ayahNum || "…"}</span>
+        <span>{t("ayat_of_day")} · 1:{ayahNum || "…"}</span>
       </div>
 
       {loading ? (

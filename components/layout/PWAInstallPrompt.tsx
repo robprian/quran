@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NeumorphicCard, NeumorphicButton } from "@/components/neumorphism";
+import { useLangStore } from "@/features/lang/store/langStore";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -10,6 +11,7 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 export function PWAInstallPrompt() {
+  const { t } = useLangStore();
   const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [dismissed, setDismissed] = useState(false);
   const [installed, setInstalled] = useState(false);
@@ -64,21 +66,21 @@ export function PWAInstallPrompt() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-bold text-sm text-neu-text dark:text-neu-dark-text">
-                Install Quran App
+                {t("install_app")}
               </div>
               <div className="text-xs text-neu-muted dark:text-neu-dark-muted">
-                Add to home screen for offline access
+                {t("install_desc")}
               </div>
             </div>
             <div className="flex flex-col gap-1.5 flex-shrink-0">
               <NeumorphicButton variant="accent" size="sm" onClick={handleInstall}>
-                Install
+                {t("install")}
               </NeumorphicButton>
               <button
                 onClick={handleDismiss}
                 className="text-xs text-neu-muted hover:text-neu-text text-center"
               >
-                Not now
+                {t("not_now")}
               </button>
             </div>
           </NeumorphicCard>

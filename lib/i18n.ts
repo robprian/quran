@@ -22,7 +22,10 @@ export type LangKey =
   | "add_bookmark" | "juz_label" | "page_label"
   | "schedule_title" | "schedule_source" | "schedule_method"
   | "qibla_title" | "qibla_sub" | "mosque_title" | "mosque_sub"
-  | "mosque_radius" | "dua_title" | "dua_sub" | "search_dua";
+  | "mosque_radius" | "dua_title" | "dua_sub" | "search_dua"
+  | "todays_progress" | "prayer" | "dhikr" | "tap_increment"
+  | "ayat_of_day" | "holy_quran_sub" | "install_app" | "install_desc" 
+  | "not_now" | "install";
 
 type Translations = Record<LangKey, string>;
 
@@ -103,6 +106,16 @@ const id: Translations = {
   dua_title: "🤲 Doa Harian",
   dua_sub: "doa pilihan beserta dalil",
   search_dua: "Cari doa...",
+  todays_progress: "Target Harian",
+  prayer: "Sholat",
+  dhikr: "Dzikir",
+  tap_increment: "Ketuk untuk menambah",
+  ayat_of_day: "Ayat Hari Ini",
+  holy_quran_sub: "Al-Qur'an Suci · 114 Surah",
+  install_app: "Pasang Aplikasi Quran",
+  install_desc: "Tambahkan ke layar utama untuk akses offline",
+  not_now: "Lain kali",
+  install: "Pasang",
 };
 
 const en: Translations = {
@@ -182,6 +195,16 @@ const en: Translations = {
   dua_title: "🤲 Daily Duas",
   dua_sub: "selected duas with references",
   search_dua: "Search duas...",
+  todays_progress: "Today's Progress",
+  prayer: "Prayer",
+  dhikr: "Dhikr",
+  tap_increment: "Tap a ring to increment",
+  ayat_of_day: "Ayat of the Day",
+  holy_quran_sub: "The Holy Quran · 114 Surahs",
+  install_app: "Install Quran App",
+  install_desc: "Add to home screen for offline access",
+  not_now: "Not now",
+  install: "Install",
 };
 
 export const TRANSLATIONS = { id, en } as const;
