@@ -10,23 +10,30 @@ import { Logo } from "@/components/ui/Logo";
 import { useFavicon } from "@/hooks/useFavicon";
 
 export function Navbar() {
-  const [dark, setDark] = useState(false);
+  type ThemeType = "light" | "dark" | "gold";
+  const [theme, setTheme] = useState<ThemeType>("light");
   const { t } = useLangStore();
   useFavicon();
 
   useEffect(() => {
-    const stored = localStorage.getItem("quran-theme");
+    const stored = localStorage.getItem("quran-theme") as ThemeType | null;
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = stored === "dark" || (!stored && prefersDark);
-    setDark(isDark);
-    document.documentElement.classList.toggle("dark", isDark);
+    let initial: ThemeType = "light";
+    if (stored === "gold") initial = "gold";
+    else if (stored === "dark" || (!stored && prefersDark)) initial = "dark";
+    
+    setTheme(initial);
+    document.documentElement.classList.toggle("dark", initial === "dark");
+    document.documentElement.classList.toggle("gold", initial === "gold");
   }, []);
 
-  const toggleDark = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("quran-theme", next ? "dark" : "light");
+  const toggleTheme = () => {
+    const nextMap: Record<ThemeType, ThemeType> = { light: "dark", dark: "gold", gold: "light" };
+    const next = nextMap[theme];
+    setTheme(next);
+    document.documentElement.classList.toggle("dark", next === "dark");
+    document.documentElement.classList.toggle("gold", next === "gold");
+    localStorage.setItem("quran-theme", next);
   };
 
   return (
@@ -71,11 +78,12 @@ export function Navbar() {
           <NeumorphicButton
             variant="flat"
             size="sm"
-            onClick={toggleDark}
-            aria-label="Toggle dark mode"
-            className="text-lg"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            title="Ganti Tema"
+            className="text-lg w-10 h-10 flex items-center justify-center p-0"
           >
-            {dark ? "☀️" : "🌙"}
+            {theme === "light" ? "🌙" : theme === "dark" ? "✨" : "☀️"}
           </NeumorphicButton>
         </div>
       </div>

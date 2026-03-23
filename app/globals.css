@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@custom-variant gold (&:is(.gold *));
 
 /* ── Custom Design Tokens (TailwindCSS v4 @theme) ───────────────────────────── */
 @theme {
@@ -70,6 +70,11 @@
 
 .dark {
   --background: #1a1a2e;
+  --foreground: #e2e8f0;
+}
+
+.gold {
+  --background: #0F172A;
   --foreground: #e2e8f0;
 }
 

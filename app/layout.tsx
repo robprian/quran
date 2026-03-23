@@ -60,7 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 try {
                   var stored = localStorage.getItem('quran-theme');
                   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (stored === 'dark' || (!stored && prefersDark)) {
+                  if (stored === 'gold') {
+                    document.documentElement.classList.add('gold');
+                  } else if (stored === 'dark' || (!stored && prefersDark)) {
                     document.documentElement.classList.add('dark');
                   }
                 } catch(e) {}

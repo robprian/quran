@@ -4,6 +4,7 @@ import { PrayerTimeCard } from "@/features/home/components/PrayerTimeCard";
 import { MenuGrid } from "@/features/home/components/MenuGrid";
 import { ProgressTracker } from "@/features/home/components/ProgressTracker";
 import { AyatOfTheDay } from "@/features/home/components/AyatOfTheDay";
+import { About } from "@/components/ui/About";
 import { useLangStore } from "@/features/lang/store/langStore";
 import Link from "next/link";
 
@@ -49,6 +50,8 @@ export default function HomePage() {
           <div className="ml-auto text-white text-xl">→</div>
         </div>
       </Link>
+
+      <About />
     </div>
   );
 }
