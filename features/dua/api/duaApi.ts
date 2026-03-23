@@ -6,44 +6,53 @@ const equranApi = axios.create({
   timeout: 15000,
 });
 
-export const fetchAllDuas = async (): Promise<Dua[]> => {
-  const { data } = await equranApi.get<EquranDuaResponse[]>("/doa");
-  
-  if (!Array.isArray(data)) {
-    throw new Error("Invalid API response format from EQuran.id");
-  }
+interface ApiListResponse {
+  status: string;
+  total?: number;
+  data: EquranDuaResponse[];
+}
 
-  return data.map((item) => ({
+interface ApiDetailResponse {
+  status: string;
+  data: EquranDuaResponse;
+}
+
+export const fetchAllDuas = async (): Promise<Dua[]> => {
+  const { data } = await equranApi.get<ApiListResponse>("/doa");
+  
+  const duaList = Array.isArray(data) ? data : data.data; 
+  
+  if (!duaList || !Array.isArray(duaList)) {
+     console.error("Invalid API response format from EQuran.id", data);
+     throw new Error("Invalid API response format from EQuran.id");
+  }
+  
+  return duaList.map((item) => ({
     id: Number(item.id),
-    group: item.grup ?? "",
-    title: item.nama ?? "",
-    arabic: item.ar ?? "",
-    latin: item.tr ?? "",
-    translation_id: item.idn ?? "",
-    description: item.tentang ?? "",
-    // Fallback split fallback if tag is a comma separated string
-    tags: item.tag ? item.tag.split(",").map((t) => t.trim()).filter(Boolean) : [],
+    group: item.grup || "Umum",
+    title: item.nama || "",
+    arabic: item.ar || "",
+    latin: item.tr || "",
+    translation_id: item.idn || "",
+    description: item.tentang || "",
+    tags: Array.isArray(item.tag) ? item.tag : (typeof item.tag === 'string' ? item.tag.split(",").map((t: string) => t.trim()).filter(Boolean) : [])
   }));
 };
 
 export const fetchDuaDetail = async (id: number): Promise<Dua> => {
-  // equran.id/api/doa doesn't seem to natively document /doa/{id} returning a single object in the same format 
-  // reliably, so we fallback to finding it from all requests or fetching the specific ID if supported.
-  // The user prompt indicates `GET /api/doa/{id}` is valid, but returns an array of length 1 or just the object.
-  // Let's implement it robustly.
-  const { data } = await equranApi.get<EquranDuaResponse | EquranDuaResponse[]>(`/doa/${id}`);
+  const { data } = await equranApi.get<ApiDetailResponse>(`/doa/${id}`);
   
-  const item = Array.isArray(data) ? data[0] : data;
+  const item = Array.isArray(data) ? data[0] : (data.data ? data.data : (data as unknown as EquranDuaResponse));
   if (!item) throw new Error("Dua not found");
-
+  
   return {
     id: Number(item.id),
-    group: item.grup ?? "",
-    title: item.nama ?? "",
-    arabic: item.ar ?? "",
-    latin: item.tr ?? "",
-    translation_id: item.idn ?? "",
-    description: item.tentang ?? "",
-    tags: item.tag ? item.tag.split(",").map((t) => t.trim()).filter(Boolean) : [],
+    group: item.grup || "Umum",
+    title: item.nama || "",
+    arabic: item.ar || "",
+    latin: item.tr || "",
+    translation_id: item.idn || "",
+    description: item.tentang || "",
+    tags: Array.isArray(item.tag) ? item.tag : (typeof item.tag === 'string' ? item.tag.split(",").map((t: string) => t.trim()).filter(Boolean) : [])
   };
 };
