@@ -1,0 +1,32 @@
+{
+  "name": "Quran App – القرآن الكريم",
+  "short_name": "Quran",
+  "description": "Aplikasi Al-Qur'an dengan jadwal sholat, arah qibla, doa harian, dan masjid terdekat",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#E0E5EC",
+  "theme_color": "#D4AF37",
+  "lang": "id",
+  "orientation": "portrait",
+  "categories": ["education", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Baca Al-Qur'an", "url": "/quran", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Jadwal Sholat", "url": "/schedule", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Arah Qibla", "url": "/qibla", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Doa Harian", "url": "/duas", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

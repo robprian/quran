@@ -1,26 +1,146 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+/* ── Custom Design Tokens (TailwindCSS v4 @theme) ───────────────────────────── */
+@theme {
+  /* Neumorphism Colors */
+  --color-neu-bg: #E0E5EC;
+  --color-neu-dark: #1a1a2e;
+  --color-neu-text: #2d3748;
+  --color-neu-dark-text: #e2e8f0;
+  --color-neu-muted: #718096;
+  --color-neu-dark-muted: #a0aec0;
+
+  /* Accent */
+  --color-accent: #D4AF37;
+  --color-accent-light: #F0D060;
+
+  /* Shadows as CSS vars */
+  --shadow-neu-flat: 8px 8px 16px #A3B1C6, -8px -8px 16px #FFFFFF;
+  --shadow-neu-pressed: inset 6px 6px 12px #A3B1C6, inset -6px -6px 12px #FFFFFF;
+  --shadow-neu-dark-flat: 8px 8px 16px #0d0d1a, -8px -8px 16px #27274a;
+  --shadow-neu-dark-pressed: inset 6px 6px 12px #0d0d1a, inset -6px -6px 12px #27274a;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-arabic: "Amiri", "Traditional Arabic", serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ── Tailwind Shadow Utilities ─────────────────────────────────────────────── */
+@layer utilities {
+  .shadow-neu-flat {
+    box-shadow: 8px 8px 16px #A3B1C6, -8px -8px 16px #FFFFFF;
+  }
+  .shadow-neu-pressed {
+    box-shadow: inset 6px 6px 12px #A3B1C6, inset -6px -6px 12px #FFFFFF;
+  }
+  .shadow-neu-dark-flat {
+    box-shadow: 8px 8px 16px #0d0d1a, -8px -8px 16px #27274a;
+  }
+  .shadow-neu-dark-pressed {
+    box-shadow: inset 6px 6px 12px #0d0d1a, inset -6px -6px 12px #27274a;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  .font-arabic {
+    font-family: "Amiri", "Traditional Arabic", serif;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite linear;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #A3B1C6 transparent;
   }
 }
 
+/* ── CSS Variables for dynamic theming ─────────────────────────────────────── */
+:root {
+  --background: #E0E5EC;
+  --foreground: #2d3748;
+}
+
+.dark {
+  --background: #1a1a2e;
+  --foreground: #e2e8f0;
+}
+
+/* ── Global base styles ─────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #A3B1C6;
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #2a2a4a;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+mark {
+  background-color: rgba(212, 175, 55, 0.3);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+::selection {
+  background-color: rgba(212, 175, 55, 0.25);
+  color: inherit;
 }
